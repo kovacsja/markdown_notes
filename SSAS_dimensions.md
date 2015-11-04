@@ -20,5 +20,8 @@ Ha következetesen neveztük el a Fact és a Dimenziótáblában a mezőket, akk
 * SchemaRestriction: itt lehet vesszőkkel megadni, hogy melyik schema táblái jelenjenek meg az Add/Remove párbeszédablakban.
 * NameMatchingCriteria: ha a Retrieve Relationships True-ra van állítva, akkor itt lehet finomhangolni, hogy a táblák közötti kapcsolatok finomhangolása milyen algoritmusok mentén történjen.
 Rendkívül hasznos tud lenni, ha view-kat hivatkozunk be a DSV-be, mivel ekkor nincsenek idegen kulcsok a táblában, így itt rugalmasabban kapcsolhatóak egymáshoz.
-`Named Query`-k és `Named Calculation`-ok segítségéven a DSV-ben lehet külön számításokat és táblákat készíteni, de ez csak abban az esetben javasolt, ha az alap adatszerkezeteket nincs jogunk módosítani. Ezért is javallott, hogy minden AS objektum egy VIEW-ra hivatkozzon, mivel azoknak a módosítása sokkal egyszerűbb, mint a tábláké. 
+`Named Query`-k és `Named Calculation`-ok segítségéven a DSV-ben lehet külön számításokat és táblákat készíteni, de ez csak abban az esetben javasolt, ha az alap adatszerkezeteket nincs jogunk módosítani. Ezért is javallott, hogy minden AS objektum egy VIEW-ra hivatkozzon, mivel azoknak a módosítása sokkal egyszerűbb, mint a tábláké.
 ##Egyszerű dimenziók tervezése
+###Varázsló használata
+Ha varázslóval is hozunk létre egy dimenziót, még utána is szerkeszthetjük, és finomhangolhatjuk. A varázsló első kérdése, hogy magunk választjuk ki a dimenzió forrásadatait, vagy a BIDS hozzon létre dimenzió, és töltse fel adatokkal automatikusan.
+Az első lépésben ki kell választani a dimenzió fő tábláját, ami közvetlenül kapcsolódik a ténytáblákhoz, és a dimezió legalacsonyabb granularitását tartalmazza.
