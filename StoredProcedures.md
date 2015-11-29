@@ -231,13 +231,18 @@ AS TABLE (
     SpatialLocation geography NULL
 );
 ```
+
 ##Mire jók a tárolt eljárások
+
 ###A feldolgozási eljárások meghívhatóak lesznek
 A sproc egy olyan script, amit az adatbázisban tárolunk. Éppen ezért az adatbázisból meghívható, és nem kell minden egyes alkalommal kézzel betöltni. Tárolt ejárások más eljárásokat is meg tudnak hívni SQL Server 2008-ban ez a beágyazás egészen 32 szintig működik.
+
 ###Biztonság
 A View-khoz hasonlóan az eljárásokkal is adhatunk úgy információt a felhasználóknak, hogy közben nem fedjük fel a mögöttes adatszerkezetet. Ha valakinek joga van egy sproc végrehajtására, akkor mindenre joga van, amit a sproc tartalmaz. Még akkor is, ha a mögöttes táblákhoz közvetlenül nem férhet hozzá. Ez azt is jelenti, hogy a felhasználó a sproc segítésével módosíthat adatot egy táblában még akkor is, ha a mögöttes táblához csak olvasási joga van.
+
 ###Teljesítmény
 Tárolt eljárások segítségével növelni lehet a rendszer teljesítményét. `CREATE PROC` paranccsal a rendszer elemzi a kódot, az első futtatás során pedig a query végrehajtási tervét optimalizája, és eltárolja a rendszer. A további futtatások során ezt a végrehajtási tervet fogja használni, hacsak a `WITH RECOMPILE` opciót nem használjuk a futtatáskor.
+
 ###Hogyan romlanak el a sproc-ok?
 A sprocok egyik hibája, hogy alap esetben csak az optimalizálás csak az első futáskor fog eltárolódni, és a későbbi futtatásokkor azt fogja használni. Ezek az eltárolt adatok azonban idővel elavulhatnak. Különösen igaz ez, ha a sproc dinamikusan áll elő. Ekkor ugyanis sosem fut le kétszer ugyanúgy. Ilyen lehet például, ha a sprocon belül egy `IF ... THEN` állítás dönti el, hogy az adott esetben éppen melyik lekérdezés fog futni.
 Ezt a hibát úgy lehet megoldani futtatáskor:
@@ -264,6 +269,7 @@ Az F11 megnyomásával elindul a debugger. A bal oldalon lévő sárga nyíl mut
 * **Call Stack Window**: ez listázza azokat a sprocokat és függvényeket, amik aktív sprocban jelenleg aktívak. Itt lehet követni, hogy a végrehajtásnak éppen melyik szintéjén járunk, és hogy az adott változónak melyik szinten mi az aktuális értéke.
 * **Output Window**: az SQL Server ide írja ki az outputjait: recordset, debug információ, visszatérési értékek, output
 * **Command Window**: Parancssoros hozzáférést enged a debugging eszközökhöz. Általában nincs rá szükség.
+
 ##Az SQLCLR és a .NET Programozás
 A .NET alkalmazásával újabb lehetőségek nyílnak az SQL szerverben:
 * alap assembly létrehozása, ami akár nem T-SQL kódot is tartalmazhat
