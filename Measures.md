@@ -25,8 +25,34 @@ A mértékek legfontosabb tulajdonsága, hogy milyen művelettel aggregálódnak
  * A `MIN` és a `MAX` egyszerűen a legkisebb és a legnagyobb értéket adja vissza.
 
 ###Distinct Count
+A `DistinctCount` egy mező egyedi elemeit számolja össze. Ugyanúgy működik, mint a `Count(Distinct <mezőnév> )` az `SQL`-ben. Ez egy nagyon költséges művelet. Az aggregációt elő lehet állítani `MDX`-ben, és many-to-many kapcsolat használtával is, de általában nem javít a kocka teljesítményén. 
+A `DistinctCount` kalkulációknak a BIDS mindig új *MeasureGroup*ot hoz létre, ami megkerülhető, de nem ajánlott. 
 
 ###None
+Amennyiben ezt választjuk, úgy értékek csak a dimenziók legalacsonyabb granularitásában fognak megjelenni, a fact- és a dimenziótáblák kulcsainak metszetében, és magasabb szintre nem összegződnek fel. 
 
 ###Semi-additive típusok
+*(AverageOfChildren, FirstChild, LastChild, FirstNonEmpty, LastNonEmpty)*
+>Alapvetően ezek is úgy viselkedenek, mint a `SUM` típusú mértékek, kivéve az idődimenzió esetében. Ehhez a SSAS-ben megfelelően kell beállítani a dimenzió típusát (Type: Time).
 
+A `Semi-additive` mértékek mindig egy idődimenzióhoz kapcsolódnak. Ha több idődimenzió is kapcsolódik a kockához, akkor az elsőhoz kötődik a mérték. Erről bővebben [itt](http://www.artisconsulting.com/blogs/greggalloway/2009/2/19/lastnonempty-gotchas).
+Ezek a számítások akkor hasznosak, ha a Fact táblában állományi adatok vannak letárolva, amiket nincs értelme összeadni. 
+* **AverageOfChildren**: A granularitás alján lévő értékek átlagát jeleníti meg. Így ha egy évet választunk ki, akkor napokhoz tartozó értékek átlagát fogjuk megkapni, és nem a hónapokét.
+* **FirstChild**: A legalasó granularitási szinten lévő első értéket jeleníti meg. 
+* **LastChild**: A legalsó graunálaritási szinthez tartozó utosló időszakhhoz tartozó értéket jeleníti meg. 
+* **FirstNonEmpty**: A `FirstChild`hoz hasonlóan működik, de kihagyja azokat az időpontokat, amihez `NULL` érték tartozik.
+* **LastNonEmpty**: A `LastChild`hoz hasonló, de kihagyja a `NULL` értékeket. 
+
+A semi-additive mértékek csak egy idődimenzióval együtt működnek. A számítások csak magasabb hierachiaszinten érvényesülnek. A semi-additíve mértékek és a `None` csak az Enterprice Editionben állnak rendelkezésre, de `MDX` szkripttel is lehet helyettesíteni őket, bár a teljesítmény nem lesz ugyanolyan. `LastNonEmpty` helyettesíthető így:
+```MDX
+SCOPE([Measures].[Sales Amount]);
+	THIS = TAIL(
+			NONEMPTY(
+				{EXISTING [Date].[Date].[Date].Members}
+				* [Measures].[Sales Amount])
+			,1).ITEM(0);
+END SCOPE
+```
+
+###By Account
+Ez az opció csak az Enterprise Editionben érhető el, és abban segít, hogy az eddigieknél bonyolultabb üzleti logikát és modellezni lehessen az OLAP kockában. Ez jellemzően egy speciális dimenziót jelent.
