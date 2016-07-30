@@ -73,11 +73,13 @@ WHERE ...
 
 ##MERGE
 Az SQL Server 2008-tól érhető el ez a parancs. Egyszerre lehet vele INSERT, UPDATE és DELETE parancsokat végrehajtani, ezért hatékonyabb, mint a felsoroltak külön-külön. 
+
 ```sql
-MERGE [tábla]
+MERGE [tábla] AS target
 USING (
 	[query]
-)
+) as source
+on target.id = source.id
 WHEN MATCHED THEN
 	[UPDATE / INSERT / DELETE]
 WHEN NOT MATCHED THEN

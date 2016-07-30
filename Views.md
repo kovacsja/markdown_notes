@@ -2,6 +2,7 @@
 @(devel)[sql,tanul]
 
 Egy `VIEW` elsődleges feladata, hogy lekérdezéseket tároljon el, és ezzel könnyítse meg a felhasználók dolgát.
+
 ```sql
 CREATE VIEW séma.[view név] [(oszlopok, )]
 [WITH [ENCRIPTION] [, SCHEMABINDING] [, VIEW_METADATA]]
@@ -34,6 +35,7 @@ Az `object id` megtalálása viszont annyira már nem egyszerű, ahhoz is egy be
 `SELECT OBJECT_DEFINITON ( OBJECT_ID(N'view_neve));`
 3. sys.comments
 A sys.comments egy olyan rendszertábla, ami leírja az adatbázis objektumait. És ehhez nem kell azokat közvetlenül meghívnunk. 
+
 ```SQL
 SELECT sc.text
 FROM sys.syscomments sc
@@ -44,6 +46,7 @@ WHERE so.name = 'view neve'
 ```
 ##Particionált táblák és view-k
 A gyorsabb feldolgozás érdekében a nagy táblákat szét lehet szabdalni egy dimenzió mentén, amikből utána `union all` használatával lehet olyan view-t késztíteni, ami ismét az összes adatot tartalmazza. Ha ezeket a táblákat `constrain` definiálásával hozzuk létre, amelyek disjunkt halmazokat alkotnak, akkor a `view`-n lehet akár `update`, `insert` és `delete` műveleteket is végrehajtani, amik a megfelelő táblákhoz nyúlnak hozzá. 
+
 ```sql
 CREATE TABLE OrderPartitionFeb08
   (OrderID		int		NOT NULL,
