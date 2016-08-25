@@ -1,0 +1,1 @@
+#Tranzakció adatok kezelése
