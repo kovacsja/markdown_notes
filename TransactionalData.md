@@ -7,7 +7,7 @@
 ##Tranzakció-részletek
 Az eddigi módszerrel létre kellene hozni egy olyan dimenziót, aminek a granularitása megegyezik a Fact tábláéval, és az egyes Tranzakcióból létrehozott ID-kat dimenzióba rendezve adnánk listát a felhasználónak, hogy szűrhessen az adatokban. 
 Ez azonban több problémát is okozhat. A legfőbb a klienseszközön jelentkező teljesítményprobléma. Ilyen esetben jelentős lassulást okozhat egy nagy dimenziótáblából szűrögetni az adatokat. 
-Amikor ezzel a problémával szembesülünk, akkor el kell döntni, hogy egy adott ponton csak a *részletek érdekelnek* bennünket, vagy *navigálni is akarunk* az adott ID dimenzió alapján. Amennyiben csak az adatokra akarjuk megjeleníteni, akkor a `AttributeHierarchyEnabled` tulajdonságot `False`-ra állítva jeleníthejük meg egyszerűbben az adatokat. A tételes lekérdezésre szolágl a `Drillthrough`.
+Amikor ezzel a problémával szembesülünk, akkor el kell döntni, hogy egy adott ponton csak a *részletek érdekelnek* bennünket, vagy *navigálni is akarunk* az adott ID dimenzió alapján. Amennyiben csak az adatokra akarjuk megjelenítePni, akkor a `AttributeHierarchyEnabled` tulajdonságot `False`-ra állítva jeleníthejük meg egyszerűbben az adatokat. A tételes lekérdezésre szolágl a `Drillthrough`.
 
 ##Drillthrough - lefúrás
 A hagyományos Pivot táblás lefúrástól abban különbözik, hogy a pivot táblánál a lefúrás az előre definiált pivot szerkezetben történik, itt viszont automatikusan a kocka legkisebb granularitásán adaja vissza az adatokat. 
@@ -30,7 +30,9 @@ Az `Additional Properties` alatt a `Default` kapcsolót `Measure Gruop`onként c
 Amennyiben csak `Action`öket adtunk hozzá a kockához, akkor ezt Deploy-olhatjuk anélkül, hogy újra kellene processzálni az egész kockát. 
 
 ####Drillthrough Columns order
+A lefúrás során az oszlopsorrendet sajnos nem lehet a fellületen megváltoztatni. Sem a használt dimenziók sorrendjét, sem azon belül az attribútumokat. 
 
 ####Drillthrough and calculated members
 
 ###Drillthrough modeling
+
