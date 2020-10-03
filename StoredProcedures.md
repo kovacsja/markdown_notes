@@ -1,5 +1,6 @@
-#Stored Procedures
-##Alapok
+# Stored Procedures
+
+## Alapok
 **Basic Syntax**:
 ```SQL
 CREATE PROCEDURE|PROC <sproc name>
@@ -40,7 +41,7 @@ WHERE
 	AND ...
 ```
 
-###Output paraméterek használata
+### Output paraméterek használata
 Akkor érdemes használni, ha nem 'recordset' információt szeretnénk visszakapni a futás végén. Ilyen lehet például egy kulcs értékénet visszaadása, amin a sproc múveletet hajtott végre, vagy a sproc futásának eredményére vonatkozó információ.
 
 **Hibajelentés beszúrása egy log táblába:**
@@ -68,13 +69,13 @@ END;
 * Az `OUTPUT` kulcsszót a sproc hívásakor és deklarálásakor is használni kell, hogy a szerver fel tudjon készülni a sproc különleges kezelésére. Ha a híváskor nem adjuk meg a kulcsszót, akkor a paraméternek nem lesznek átadva értékek, és nagy valószínűséggel `NULL` értékkel fog visszatérni a sproc.
 * A kimeneti eredményben használt változónak nem kell ugyanazt a nevet adni, mint a sproc belső paraméterének.
 * Az `EXEC` kulcsszó használata szükséges, ha a sproc hívása nem az első lépés a batch-ben, de ha akkor is használjuk, akkor legalább következetesek vagyunk.
-###Sikeresség, vagy kudarc visszaigazolása visszatérési értékkel
+### Sikeresség, vagy kudarc visszaigazolása visszatérési értékkel
 A visszatérési értéket `return value` használatának több célja is lehet. Az egyik, hogy konkrét értéket adjon vissza a sproc futása után, de ez nem ajánlott. Erre a célra inkább az előbb leírt `OUTPUT` kulcsszót érdemes használni. A visszatérési értéket arra érdemes használni, hogy információt kapjuk a sproc futásának állapotáról.
 Minden spoc ad vissza értéket, attól függetlenül, hogy azt külön leprogramozzuk-e, vagy sem. A sproc alapból 0 értéket ad vissza sikeres futás esetén. A vissazatérési érétk beállítása a következő utasítás használható:
 `RETURN [<integer value to return>]` **A visszatérési értéknek egész számnak kell lennie!**
 !Fontos, hogy `RETURN` kulcsszó használata azonnali, és feltétel nélkül megszakítja a sproc futását, és a kulcsszó után egyetlen újabb sor sem fog végrehajtódni.
 Hogy a visszatérési értéket felhasználjuk, ahhoz azt egy változóban kell eltárolni: `EXEC @ReturnVal = spMySproc;`
-###További hibakezelési gyakorlatok
+### További hibakezelési gyakorlatok
 A leggyakoribb hibatípusok:
 * hibák, amik `runtime error`-t okoznak, és megakadályozzák a kód további futását
 * olyan hibák, amiket az SQL Server elfog, de nem okoznak `runtime error`-t, ezért nem állítják le a kód futását.
@@ -83,9 +84,9 @@ A leggyakoribb hibatípusok:
 (Hogy az egyes kategóriákba mi tartozik az erősen függ a használt szerver verziójától.)
 
 A hibák kezelésének legalapvetőbb módja a `TRY/CATCH` használata.
-####Inline Errors
+#### Inline Errors
 Ezek azok a hibák, amik nem állítják le a sproc futását, de mégsem sikerül végrehajtani azt, amit a sproc akart.
-####Az `@@ERROR` használata
+#### Az `@@ERROR` használata
 Az `@@ERROR` rendszerfüggvény tartalmazza az utolsó T-SQL script futásából származó hiba számát. Ha az értéke 0, akkor nem történt hiba a futás alatt. A működése hasonló az `ERROR_NUMBER()` függvényhez, viszont az utolsó csak a `CATCH` blokk hatáskörében működik, és az értéke nem változik, míg az `@@ERROR` minden parancs futtatásakor új értéket kap. Tehát ha fel akarjuk használni a `@@ERROR`-t, akkor azt folyamatosan egy változóba kell eltárolnunk.
 ```SQL
 DECLARE @Error int;
@@ -99,9 +100,9 @@ PRINT 'The value of @Error is ' + CONVERT(varchar, @Error);
 --az @@ERROR értéke már 0 lesz, mert az utolsó parancs, a PRINT resetelte a @@ERROR értékét
 PRINT 'The value of @@ERROR is ' + CONVERT(varchar, @@ERROR);
 ```
-####Az @@ERROR használata eljárásokban
+#### Az @@ERROR használata eljárásokban
 Ha a `@@ERROR`-t használjuk hibakezelésre, akkor azt valószínűleg azért tesszük, hogy kompatibilisek maradjuk a SQL Server 2000-rel. Egyébként a `TRY/CATCH` használata javasolt, ami sokkal rugalmasabb hibakezelést tesz lehetővé.
-####Hibák kezelése, mielőtt azok még bekövetkeznének
+#### Hibák kezelése, mielőtt azok még bekövetkeznének
 Az olyan logikai hibákra, amiknek a felmerülését az SQL szerver nem tudja érzékelni, ezért ezeket az eseteket magunknak kell detektálni, és kezelni. Például ha olyan táblában szeretnénk UPDATE-elni, ahol nincs meg a kívánt PrimaryKey, attól a parancs még lefut, csak nem változtat meg semmit a táblában.
 
 ```SQL
@@ -130,7 +131,7 @@ END
 ...
 ```
 
-####Manuális hibahívás
+#### Manuális hibahívás
 Ezzel olyan `runtime error`-t is létre lehet hozni, amit saját magunk definiálhatunk, és magától megállítja a program futását.
 ```sql
 RAISERROR (<message ID | message string | variable>, <severity>, <state>
@@ -200,7 +201,7 @@ Alapértelmezettként a `RAISERROR` nem módosítja a `@@ERROR` értékét. Ehel
 **WITH NOWAIT**
 Azonnal értesíti a klienst a hibáról, és nem vár a program befejezéséig.
 
-####Saját hibaüzenetek hozzáadása
+#### Saját hibaüzenetek hozzáadása
 Van egy rendszerbe épített sproc, a `sp_addmessage`, amivel saját hibaüzeneteket lehet beállítani a szerveren:
 ```SQL
 sp_addmessage [@msgnum = ] <msg id>,
@@ -214,9 +215,9 @@ sp_addmessage [@msgnum = ] <msg id>,
 **@with_log**: ugyanúgy működik, mint a `RAISERROR` esetén. Ha `TRUE` értéket kap, akkor a hibaüzenet bekerül a szerver logjába.
 **@replace**: Ha egy meglévő hibaüzenetet akarunk lecserélni a sajátunkra, akkor ennek az változónak az értékét kell 'REPLACE'-re állítani. Ha ezt kihagyjuk, és egy már meglévő `msgID`-t adunk meg, akkor hibával fog lefutni a parancs.
 Akármilyen adatbázison futtatjuk ezt a parancsot, az mindig a master adatbázisban fog végrehajtódni. Ezért ha migráljuk az adatbázisunkat egy másik szerverre, akkor azon az új szerveren is létre kell hoznunk a saját hibaüzeneteinket.
-####Saját hibaüzenet eltávolítása
+#### Saját hibaüzenet eltávolítása
 `sp_dropmessage <message number>`
-##Table-Valued Parameters (TVP)
+## Table-Valued Parameters (TVP)
 A `TABLE`, mint adattípus SQL Server 2005 óta létezik, de akkor csak annyira voltak képesek, mint a tábla eredményt adó UDF-ek.
 A TVP-k hasznát az egy-a-többhöz kapcsolatokkal való munkánál lehet érvényesíteni. Például: egy rendelés header részét és a body részét egy művelettel hozzá lehet fűzni az adott táblákhoz, ahelyett, hogy a rendelés részleteit soronkét, több lépésben kelljen isertálni.
 ```SQL
@@ -232,18 +233,18 @@ AS TABLE (
 );
 ```
 
-##Mire jók a tárolt eljárások
+## Mire jók a tárolt eljárások
 
-###A feldolgozási eljárások meghívhatóak lesznek
+### A feldolgozási eljárások meghívhatóak lesznek
 A sproc egy olyan script, amit az adatbázisban tárolunk. Éppen ezért az adatbázisból meghívható, és nem kell minden egyes alkalommal kézzel betöltni. Tárolt ejárások más eljárásokat is meg tudnak hívni SQL Server 2008-ban ez a beágyazás egészen 32 szintig működik.
 
-###Biztonság
+### Biztonság
 A View-khoz hasonlóan az eljárásokkal is adhatunk úgy információt a felhasználóknak, hogy közben nem fedjük fel a mögöttes adatszerkezetet. Ha valakinek joga van egy sproc végrehajtására, akkor mindenre joga van, amit a sproc tartalmaz. Még akkor is, ha a mögöttes táblákhoz közvetlenül nem férhet hozzá. Ez azt is jelenti, hogy a felhasználó a sproc segítésével módosíthat adatot egy táblában még akkor is, ha a mögöttes táblához csak olvasási joga van.
 
-###Teljesítmény
+### Teljesítmény
 Tárolt eljárások segítségével növelni lehet a rendszer teljesítményét. `CREATE PROC` paranccsal a rendszer elemzi a kódot, az első futtatás során pedig a query végrehajtási tervét optimalizája, és eltárolja a rendszer. A további futtatások során ezt a végrehajtási tervet fogja használni, hacsak a `WITH RECOMPILE` opciót nem használjuk a futtatáskor.
 
-###Hogyan romlanak el a sproc-ok?
+### Hogyan romlanak el a sproc-ok?
 A sprocok egyik hibája, hogy alap esetben csak az optimalizálás csak az első futáskor fog eltárolódni, és a későbbi futtatásokkor azt fogja használni. Ezek az eltárolt adatok azonban idővel elavulhatnak. Különösen igaz ez, ha a sproc dinamikusan áll elő. Ekkor ugyanis sosem fut le kétszer ugyanúgy. Ilyen lehet például, ha a sprocon belül egy `IF ... THEN` állítás dönti el, hogy az adott esetben éppen melyik lekérdezés fog futni.
 Ezt a hibát úgy lehet megoldani futtatáskor:
 ```SQL
@@ -251,9 +252,9 @@ EXEC spMySproc [paraméterek]
 	WITH RECOMPILE
 ```
 Vagy már állandó opcióként megadhatjuk azt az opciót a sproc előállításakor. Ilyenkor a `WITH RECOMPILE` opció közvetlenül az `AS` kulcsszó elé kerül. Ekkor a végrehajtási terv minden egyes futtatáskor újra fog számolódni.
-##Rekurzió
+## Rekurzió
 Amikor a kód magát hívja meg, arra is vonatkozik a beágyazott eljárásokra vonatkozó limit. Mivel csak 32 szintet lehet egymásba ágyazni, ezért a rekurzió is csak 32-szer tudja lefuttatni magát. Azt követően hibával lép ki az eljárás.
-##Debugging
+## Debugging
 A debugger a management studióban hasonlóan működik a VB debuggerhez. A *Debug* menüben lehet választani a *Start Debugger* (Alt+F5), vagy a *Step Into* (F11) lehetőségek közül.
 Az F11 megnyomásával elindul a debugger. A bal oldalon lévő sárga nyíl mutatja, hogy melyik sor végrehajtása következik. Az eszköztáron lévő ikonok pedig az elérheztő opciókat jelölik:
 * **Continue**: ezzel végigfut a sproc, vagy a következő *breaking pont*nál megáll.
@@ -263,14 +264,14 @@ Az F11 megnyomásával elindul a debugger. A bal oldalon lévő sárga nyíl mut
 * **Stop Debugging**: Leállítja a végrehajtást, de a Debugging ablak nyitva marad.
 * **Toggle Breakpoints and Remove All Breakpoints**: lehetőség van töréspontok beállítására, ahol a kód végrehajtása debugging módban leáll. Lehetőség van külön ablakban megjeleníteni az összes megjelölt töréspontot, ami nagyobb sprocok estében hasznos.
 
-###A debugging végrehajtást segítő ablakok:
+### A debugging végrehajtást segítő ablakok:
 * **Locals Window**: ebben az ablakban lehet nyomonkövetni a scopeban aktív változókat. Az ablakban lévő változók, és azoknak az értéke is folyamatosan változhat a végrehajtás szakaszaitól függően. Az ablakban minden változónak megjelenik a neve, a jelenlegi értéke, és az adattípusa is. Emellett futtatás közben is meg lehet az egyes változók értékeit változtatni.
 * **Watch Window**: itt lehet beállítani azokat a változókat és kifejezéseket, amiknek az értékét figyelemmel akarjuk kísérni a debug során.
 * **Call Stack Window**: ez listázza azokat a sprocokat és függvényeket, amik aktív sprocban jelenleg aktívak. Itt lehet követni, hogy a végrehajtásnak éppen melyik szintéjén járunk, és hogy az adott változónak melyik szinten mi az aktuális értéke.
 * **Output Window**: az SQL Server ide írja ki az outputjait: recordset, debug információ, visszatérési értékek, output
 * **Command Window**: Parancssoros hozzáférést enged a debugging eszközökhöz. Általában nincs rá szükség.
 
-##Az SQLCLR és a .NET Programozás
+## Az SQLCLR és a .NET Programozás
 A .NET alkalmazásával újabb lehetőségek nyílnak az SQL szerverben:
 * alap assembly létrehozása, ami akár nem T-SQL kódot is tartalmazhat
 * olyan függvényeket hozhatunk létre, amit az UDF-ben nem lehetne
