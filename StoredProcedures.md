@@ -16,9 +16,9 @@ A paraméterek használata opcionális, a ténylegesen végrehajtandó kód pedi
 A sproc futtatása az `EXEC` paranccsal hajtható végre:
 `EXEC spEmployee;`
 A View-khoz hasonlóan a már elkészült eljárásokat a `CREATE` és az `ALTER` paranccsal is módosíthatjuk. A két módszer közötti különbség, hogy az `ALTER` elvárja a megnevezett sproc létezését, míg a `CREATE` nem. Az `ALTER` nem változtatja meg a meglévő sproc jogosultságait, illtve a már kiosztott objectID-t, valamint a beállított függőségi viszonyokat.
-##Paraméterek használata
+## Paraméterek használata
 Amennyiben a paramétereket a sproc-on kívül declaráljuk, akkor azokat akár név, akár pozíció alapján is át lehet adni az eljárásnak.
-###Pareméterek deklarálása
+### Pareméterek deklarálása
 A paraméterek deklarálásához ezekre van szükség:
 - név
 - adattípus
