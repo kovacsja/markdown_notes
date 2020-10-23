@@ -1,5 +1,7 @@
-Sub mn()
 
+'''
+Sub column_list()
+'pivot fejlécek listába másolása
 Dim i As Integer
 
 i = 5
@@ -16,3 +18,4 @@ i = i + 1
 Loop
 
 End Sub
+'''
