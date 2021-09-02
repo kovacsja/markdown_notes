@@ -1,0 +1,2 @@
+# Számított mértékek hozzáadása kockához
+
